@@ -14,6 +14,6 @@ public class TokenService {
     }
 
     public String deserializeToken(String token) {
-        return token.substring("online".length(), token.indexOf("token"));
+        return token.substring(PREFIX.length(), token.indexOf(POSTFIX));
     }
 }

@@ -9,7 +9,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private AuthenticationRepository authenticationRepository;
+    private final AuthenticationRepository authenticationRepository;
 
     /**
      * У сервиса аутентификации есть метод - добавить новую запись.
