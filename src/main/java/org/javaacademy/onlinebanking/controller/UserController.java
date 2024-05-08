@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/bank")
+@RequestMapping("/api/bank/user")
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/user/signup")
+    @PostMapping("/signup")
     public ResponseEntity<String> signUp(@RequestBody UserDto userDto) {
         String pin = userService.registerUser(userDto.getPhone(), userDto.getFullName());
         return ResponseEntity.status(HttpStatus.CREATED).body(pin);
     }
 
-    @PostMapping("/user/auth")
+    @PostMapping("/auth")
     public ResponseEntity<?> signIn(@RequestBody SingInDto singInDto) {
         String token = userService.authenticateUser(singInDto.getPhone(), singInDto.getPin());
         return ResponseEntity.accepted().body(token);

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class CurrencyControllerAdvice {
+public class OnlineBankingControllerAdvice {
 
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<String> userAlreadyExistException(Exception e) {

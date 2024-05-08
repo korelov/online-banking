@@ -39,10 +39,11 @@ public class AccountService {
      *
      * @param user
      */
-    public void createAccountForUser(User user) {
+    public String createAccountForUser(User user) {
         String accountId = accountIdGenerator();
         Account account = new Account(accountId, user);
         accountRepository.addAccount(account);
+        return accountId;
     }
 
     /**

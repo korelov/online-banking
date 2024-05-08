@@ -1,6 +1,7 @@
 package org.javaacademy.onlinebanking.service;
 
 import lombok.RequiredArgsConstructor;
+import org.javaacademy.onlinebanking.entity.Account;
 import org.javaacademy.onlinebanking.entity.Operation;
 import org.javaacademy.onlinebanking.entity.User;
 import org.javaacademy.onlinebanking.repository.OperationRepository;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +24,9 @@ public class OperationService {
      * @param accountId
      * @return
      */
-    public List<Operation> getOperationsByAccount(String accountId) {
+    private List<Operation> getOperationsByAccount(String accountId) {
         return operationRepository.getOperationsData().values().stream()
                 .filter(operation -> operation.getAccountId().equals(accountId)).toList();
-
     }
 
     /**
@@ -46,7 +47,11 @@ public class OperationService {
      * @return
      */
     public List<Operation> getOperationsByUser(User user) {
-        accountService.getUserAccounts(user);
-        return new ArrayList<>();
+        List<Account> userAccounts = accountService.getUserAccounts(user);
+        return userAccounts.stream()
+                .map(Account::getAccountId)
+                .flatMap(accountId -> getOperationsByAccount(accountId)
+                        .stream())
+                .collect(Collectors.toList());
     }
 }

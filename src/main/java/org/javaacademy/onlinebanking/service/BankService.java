@@ -7,7 +7,6 @@ import org.javaacademy.onlinebanking.enums.OperationType;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,8 +38,7 @@ public class BankService {
         // Списание со счета
         accountService.withdrawAmount(accountId, amount);
         UUID uuid = UUID.randomUUID();
-        Operation operation = new Operation(
-                uuid,
+        Operation operation = new Operation(uuid,
                 accountId,
                 OperationType.WITHDRAW,
                 amount,
@@ -59,8 +57,9 @@ public class BankService {
      */
     public List<Operation> getPaymentHistory(String token) {
         // Получаем пользователя по токену
+        User userByToken = userService.getUserByToken(token);
         // Возвращаем историю операций пользователя
-        return new ArrayList<>();
+        return operationService.getOperationsByUser(userByToken);
     }
 
     /**
@@ -75,8 +74,7 @@ public class BankService {
         // Зачисление на счет
         accountService.deposit(accountId, amount);
         UUID uuid = UUID.randomUUID();
-        Operation operation = new Operation(
-                uuid,
+        Operation operation = new Operation(uuid,
                 accountId,
                 OperationType.DEPOSIT,
                 amount,
