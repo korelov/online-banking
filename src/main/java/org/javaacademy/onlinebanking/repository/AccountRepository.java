@@ -22,17 +22,17 @@ public class AccountRepository {
      * @param account
      */
     public void addAccount(Account account) {
-        accounts.put(account.getId(), account);
+        accounts.put(account.getAccountId(), account);
     }
 
     /**
      * Поиск счета по номеру
      *
-     * @param id
+     * @param accountId
      * @return
      */
-    public Account findById(String id) {
-        return accounts.get(id);
+    public Account findById(String accountId) {
+        return accounts.get(accountId);
     }
 
     /**

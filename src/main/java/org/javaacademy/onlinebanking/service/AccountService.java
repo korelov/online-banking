@@ -92,8 +92,7 @@ public class AccountService {
      * @return
      */
     public BigDecimal getAccountBalance(String accountId) {
-        Account account = findById(accountId);
-        return account.getAmount();
+        return findById(accountId).getAmount();
     }
 
     /**

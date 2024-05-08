@@ -27,6 +27,8 @@ public class UserController {
         return ResponseEntity.accepted().body(token);
     }
 
+    //TODO удалить !
+    @Deprecated(forRemoval = true)
     @GetMapping()
     public User getUserByToken(@RequestHeader String token) {
         return userService.getUserByToken(token);

@@ -5,8 +5,8 @@ import lombok.Value;
 
 @RequiredArgsConstructor
 public enum OperationType {
-    DEBETING("Списание"),
-    CREDITING("Зачисление");
+    WITHDRAW("Списание"),
+    DEPOSIT("Зачисление");
 
     private final String operation;
 }

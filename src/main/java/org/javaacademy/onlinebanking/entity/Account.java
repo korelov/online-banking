@@ -12,7 +12,7 @@ import java.math.RoundingMode;
 @RequiredArgsConstructor
 public class Account {
     @NonNull
-    private String id;
+    private String accountId;
     @NonNull
     private User user;
     @Setter
