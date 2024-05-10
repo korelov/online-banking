@@ -17,11 +17,10 @@ public class FinancialOperationService {
     private final AccountService accountService;
 
     /**
-     * 2.1 Показывать все операции по счету.
-     * Порядок операций по дате (сначала новые, потом более старые).
+     * Показывать все операции по счету. Порядок операций по дате (сначала новые, потом более старые).
      *
-     * @param accountId
-     * @return
+     * @param accountId Номер счета
+     * @return Список операций по счету
      */
     private List<FinancialOperation> getOperationsByAccount(String accountId) {
         return operationRepository.getOperationsData().values().stream()
@@ -29,21 +28,20 @@ public class FinancialOperationService {
     }
 
     /**
-     * 2.2. Заносить новую операцию.
+     * Добавление новой операции
      *
-     * @param financialOperation
+     * @param financialOperation Финансовая операция
      */
     public void addOperation(FinancialOperation financialOperation) {
         operationRepository.add(financialOperation);
     }
 
     /**
-     * 2.3 Показывать все операции для пользователя. На вход пользователь.
-     * Получаем счета пользователя (этап2 пункт 2.5), ищем по этим счетам операции.
+     * Показывать все операции для пользователя. На вход пользователь.
      * Порядок операций по дате (сначала новые, потом более старые).
      *
-     * @param user
-     * @return
+     * @param user Пользователь
+     * @return Все операции пользователя
      */
     public List<FinancialOperation> getOperationsByUser(User user) {
         List<Account> userAccounts = accountService.getUserAccounts(user);

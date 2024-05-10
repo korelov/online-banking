@@ -22,16 +22,16 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/bank")
-@Tag(name = "Контроллер финансовых операций", description = "Можно посмотреть все финансовые операции " +
-        "пользователя, сделать платеж(списание) или пополнить счет")
+@Tag(name = "Контроллер финансовых операций", description = "Можно посмотреть все финансовые операции "
+        + "пользователя, сделать платеж(списание) или пополнить счет")
 public class FinancialOperationController {
     private final BankService bankService;
 
     @GetMapping("/operations")
     @Operation(
             summary = "Список всех операций пользователя ПО ТОКЕНУ",
-            description = "Принимает в параметре запроса ТОКЕН и возвращает список всех операций," +
-                    " отсортированный по дате"
+            description = "Принимает в параметре запроса ТОКЕН и возвращает список всех операций,"
+                    + " отсортированный по дате"
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -50,8 +50,8 @@ public class FinancialOperationController {
     @PostMapping("/operations/pay")
     @Operation(
             summary = "Совершить платеж(Списание) по счету",
-            description = "Принимает тело запроса - токен, сумму операции, номер счета, описание операции." +
-                    " Делает платеж по пользовательскому счету"
+            description = "Принимает тело запроса - токен, сумму операции, номер счета, описание операции."
+                    + " Делает платеж по пользовательскому счету"
     )
     public ResponseEntity<?> makePayment(@RequestBody PayDto payDto) {
         bankService.makePayment(payDto.getAccountId(),
@@ -64,8 +64,8 @@ public class FinancialOperationController {
     @PostMapping("/operations/receive")
     @Operation(
             summary = "Пополнение счета",
-            description = "В тело запроса положить сумму операции, номер счета, описание операции. " +
-                    "Делает зачисление по этому счету"
+            description = "В тело запроса положить сумму операции, номер счета, описание операции. "
+                    + "Делает зачисление по этому счету"
     )
     public ResponseEntity<?> makeDeposit(@RequestBody ReceiveDto receiveDto) {
         bankService.makeDeposit(receiveDto.getAccountId(),
@@ -77,8 +77,8 @@ public class FinancialOperationController {
     @PostMapping("/transfer")
     @Operation(
             summary = "Межбанковский перевод",
-            description = "Принимает тело запроса - токен, сумму операции, номер счета, описание операции." +
-                    " Делает межбанковский перевод на счет банка партнера"
+            description = "Принимает тело запроса - токен, сумму операции, номер счета, описание операции."
+                    + " Делает межбанковский перевод на счет банка партнера"
     )
     public ResponseEntity<?> transferToAnotherBank(@RequestBody PayDto payDto) {
         bankService.transferToAnotherBank(payDto.getToken(),

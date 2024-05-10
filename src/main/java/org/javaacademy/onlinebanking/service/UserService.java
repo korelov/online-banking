@@ -22,9 +22,9 @@ public class UserService {
      * Регистрация пользователя: передается телефон, фио владельца.
      * Возврашает случайный пинкод из 4 цифр (ТЕКСТ! "0001").
      *
-     * @param phone
-     * @param fullName
-     * @return
+     * @param phone    телефон
+     * @param fullName ФИО
+     * @return Пин код
      */
     public PinDto registerUser(String phone, String fullName) {
         User existingUser = userRepository.findByPhone(phone);
@@ -40,11 +40,10 @@ public class UserService {
     }
 
     /**
-     * Аутентификация пользователя: передается телефон и пинкод.
-     * Возвращается сгенерированный токен.
+     * Аутентификация пользователя: передается телефон и пинкод. Возвращается сгенерированный токен.
      *
-     * @param phone
-     * @param pin
+     * @param phone телефон
+     * @param pin   Пин-код
      */
     public TokenDto authenticateUser(String phone, String pin) {
         User existingUser = userRepository.findByPhone(phone);
@@ -60,10 +59,10 @@ public class UserService {
     }
 
     /**
-     * Нахождение пользователя по токену (на вход токен)
+     * Нахождение пользователя по токену (на вход токен).
      *
-     * @param token
-     * @return
+     * @param token уникальный токен
+     * @return пользователь
      */
     public User getUserByToken(String token) {
         UUID userId = UUID.fromString(tokenService.deserializeToken(token));

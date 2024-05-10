@@ -18,10 +18,10 @@ public class AccountService {
 
     /**
      * Создать метод генерации номера счета. На выход сгенерированная строка:
-     * "[6 цифр]". Например: "000001"
+     * "[6 цифр]". Например: "000001".
      * Номера счетов уникальны (не могут повторяться).
      *
-     * @return
+     * @return вернет уникальный номер счета, которого еще нет в репозитории
      */
     private String accountIdGenerator() {
         String accountId = numberRandomizer();
@@ -38,7 +38,7 @@ public class AccountService {
     /**
      * Создать счет для пользователя - на вход пользователь: создается счет с остатком 0.00.
      *
-     * @param user
+     * @param user Пользователь
      */
     public String createAccountForUser(User user) {
         String accountId = accountIdGenerator();
@@ -48,11 +48,11 @@ public class AccountService {
     }
 
     /**
-     * Занести деньги на счет (номер счета, сумма).
-     * Увеличивает остаток счета. Если счета не существует - ошибка.
+     * Занести деньги на счёт (номер счета, сумма). Увеличивает остаток счета.
+     * Если счета не существует - ошибка.
      *
-     * @param accountId
-     * @param amount
+     * @param accountId Номер счета
+     * @param amount    Сумма к зачислению
      */
     public void deposit(String accountId, BigDecimal amount) {
         Account account = findById(accountId);
@@ -64,8 +64,8 @@ public class AccountService {
      * Остаток после операции не может быть отрицательный.
      * Если счета не существует - ошибка.
      *
-     * @param accountId
-     * @param amount
+     * @param accountId Номер счета
+     * @param amount    Сумма списания
      */
     public void withdrawAmount(String accountId, BigDecimal amount) {
         Account account = findById(accountId);
@@ -80,8 +80,8 @@ public class AccountService {
     /**
      * Получить счета пользователя (на вход пользователь), на выход список его счетов.
      *
-     * @param user
-     * @return
+     * @param user Пользователь
+     * @return Список счетов пользователя
      */
     public List<Account> getUserAccounts(User user) {
         return accountRepository.getAllAccountsByUser(user);
@@ -91,7 +91,7 @@ public class AccountService {
      * Получить остаток по счету(номер счета). На выход остаток.
      * Если счета не существует - ошибка.
      *
-     * @return
+     * @return Остаток по счету, с остатком 0.00.
      */
     public BigDecimal getAccountBalance(String accountId) {
         return findById(accountId).getAmount();
@@ -99,11 +99,11 @@ public class AccountService {
 
     /**
      * Проверка принадлежности счета к пользователю.
-     * На вход пользователь и номер счета. Возвращает принадлежит или нет.
+     * *
      *
-     * @param user
-     * @param accountId
-     * @return
+     * @param user      Пользователь
+     * @param accountId Номер счета
+     * @return Результат проверки
      */
     public boolean checkAccountBelongsToUser(User user, String accountId) {
         return accountRepository.findById(accountId).getUser().equals(user);

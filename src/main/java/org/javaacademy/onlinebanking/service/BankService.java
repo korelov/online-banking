@@ -21,14 +21,14 @@ public class BankService {
     private final BankConfiguration bankConfiguration;
 
     /**
-     * 3.1. Делать платеж: на вход - номер счета, сумма, описание, токен. На основании токена получаем пользователя.
+     * Делаем платеж: на вход - номер счета, сумма, описание, токен. На основании токена получаем пользователя.
      * Проверяем что счет принадлежит пользователю(этап 2 пункт2.7): если счет не принадлежит пользователю,
      * выкидываем ошибку. Производит списание со счета (2 этап 2.4 пункт). Записывает операцию в историю.
      *
-     * @param accountId
-     * @param amount
-     * @param description
-     * @param token
+     * @param accountId   Номер счета
+     * @param amount      Сумма списания
+     * @param description Описание операции
+     * @param token       Пользовательский токен
      */
     public void makePayment(String accountId, BigDecimal amount, String description, String token) {
         // Проверяем токен, получаем пользователя
@@ -37,7 +37,12 @@ public class BankService {
         checkAccountInBuUser(accountId, userByToken);
         // Списание со счета
         accountService.withdrawAmount(accountId, amount);
-        FinancialOperation financialOperation = createFinancialOperation(accountId, amount, description, FinancialOperationType.WITHDRAW);
+        // Создаем финансовую операцию
+        FinancialOperation financialOperation = createFinancialOperation(
+                accountId,
+                amount,
+                description,
+                FinancialOperationType.WITHDRAW);
         // Запись операции в историю
         financialOperationService.addOperation(financialOperation);
     }
@@ -53,8 +58,8 @@ public class BankService {
     /**
      * Проверяем, что пользователь является владельцем счета.
      *
-     * @param accountId
-     * @param userByToken
+     * @param accountId   Номер счета
+     * @param userByToken Пользователь найденный по токену
      */
     private void checkAccountInBuUser(String accountId, User userByToken) {
         boolean checkAccountBelongsToUser = accountService.checkAccountBelongsToUser(userByToken, accountId);
@@ -64,12 +69,11 @@ public class BankService {
     }
 
     /**
-     * 3.2. Показывать всю историю платежей по пользователю: на вход токен.
+     * Показывать всю историю платежей по пользователю
      * На выход история операция по всем счетам пользователя в отсортированной по дате.
-     * По токену получить пользователя, дальше пункт 2.3.
      *
-     * @param token
-     * @return
+     * @param token Пользовательский токен
+     * @return История операция по всем счетам пользователя в отсортированной по дате.
      */
     public List<FinancialOperation> getPaymentHistory(String token) {
         // Получаем пользователя по токену
@@ -79,21 +83,29 @@ public class BankService {
     }
 
     /**
-     * 3.3. Делать засчисление: на вход - номер счета, сумма, описание.
-     * Зачисляет на счет деньги и записывает операцию в истори
+     * Пополнение счета и записываем финансовую операцию в историю
      *
-     * @param accountId
-     * @param amount
-     * @param description
+     * @param accountId   Номер счета
+     * @param amount      Сумма к пополнению
+     * @param description Описание
      */
     public void makeDeposit(String accountId, BigDecimal amount, String description) {
         // Зачисление на счет
         accountService.deposit(accountId, amount);
-        FinancialOperation financialOperation = createFinancialOperation(accountId, amount, description, FinancialOperationType.DEPOSIT);
+        FinancialOperation financialOperation = createFinancialOperation(
+                accountId, amount, description, FinancialOperationType.DEPOSIT);
         // Запись операции в историю
         financialOperationService.addOperation(financialOperation);
     }
 
+    /**
+     * Межбанковский перевод
+     *
+     * @param token       Пользовательский токен
+     * @param amount      Сумма перевода
+     * @param description Описание
+     * @param accountId   Номер счета
+     */
     public void transferToAnotherBank(String token,
                                       BigDecimal amount,
                                       String description,
@@ -105,7 +117,8 @@ public class BankService {
         // Списание со счета
         accountService.withdrawAmount(accountId, amount);
         // Создание записи об операции
-        FinancialOperation financialOperation = createFinancialOperation(accountId, amount, description, FinancialOperationType.TRANSFER);
+        FinancialOperation financialOperation = createFinancialOperation(
+                accountId, amount, description, FinancialOperationType.TRANSFER);
         // Запись операции в историю
         financialOperationService.addOperation(financialOperation);
         //перевод в другой банк
@@ -114,6 +127,5 @@ public class BankService {
                 description,
                 userByToken.getFullName());
     }
-
 }
 

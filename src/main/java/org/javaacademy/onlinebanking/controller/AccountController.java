@@ -66,8 +66,8 @@ public class AccountController {
     @PostMapping("/account")
     @Operation(
             summary = "Создает счет для пользователя ПО ТОКЕНУ",
-            description = "В теле запроса принимаем токен пользователя и создает счет" +
-                    " и возвращает уникальный номер счета"
+            description = "В теле запроса принимаем токен пользователя и создает счет"
+                    + " и возвращает уникальный номер счета"
     )
     public ResponseEntity<?> createAccount(@RequestBody TokenDto tokenDto) {
         User userByToken = userService.getUserByToken(tokenDto.getToken());

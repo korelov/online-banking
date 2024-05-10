@@ -14,6 +14,14 @@ import java.util.Map;
 public class InterBankTransfersService {
     private final BankConfiguration bankConfiguration;
 
+    /**
+     * Метод отправит POST запрос по адресу - bank.partner.url + /operations/receive
+     *
+     * @param senderBankName Банк отправитель
+     * @param amount         Сумма перевода
+     * @param description    Описание
+     * @param senderFullName ФИО отправителя
+     */
     public void transferToAnotherBank(String senderBankName,
                                       BigDecimal amount,
                                       String description,

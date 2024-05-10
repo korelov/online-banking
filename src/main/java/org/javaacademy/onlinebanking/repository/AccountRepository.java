@@ -19,7 +19,7 @@ public class AccountRepository {
     /**
      * Добавление счета
      *
-     * @param account
+     * @param account Счет
      */
     public void addAccount(Account account) {
         accounts.put(account.getAccountId(), account);
@@ -28,8 +28,8 @@ public class AccountRepository {
     /**
      * Поиск счета по номеру
      *
-     * @param accountId
-     * @return
+     * @param accountId Номер счета
+     * @return Вернет счет
      */
     public Account findById(String accountId) {
         return accounts.get(accountId);
@@ -38,8 +38,8 @@ public class AccountRepository {
     /**
      * Получение всех счетов у пользователя
      *
-     * @param user
-     * @return
+     * @param user Пользователь
+     * @return Список счетов пользователя
      */
     public List<Account> getAllAccountsByUser(User user) {
         return accounts.values().stream()
