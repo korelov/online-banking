@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Сущность для Аутентификации пользователя")
-public class SingInDto {
-    private String phone;
+@Schema(description = "PIN-код")
+public class PinDto {
+    @Schema(description = "Идентификатор", example = "число из 4 цифр")
     private String pin;
 }

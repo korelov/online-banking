@@ -1,9 +1,10 @@
 package org.javaacademy.onlinebanking.service;
 
 import lombok.RequiredArgsConstructor;
-import org.javaacademy.onlinebanking.entity.Operation;
+import org.javaacademy.onlinebanking.config.BankConfiguration;
+import org.javaacademy.onlinebanking.entity.FinancialOperation;
 import org.javaacademy.onlinebanking.entity.User;
-import org.javaacademy.onlinebanking.enums.OperationType;
+import org.javaacademy.onlinebanking.enums.FinancialOperationType;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,7 +16,9 @@ import java.util.UUID;
 public class BankService {
     private final UserService userService;
     private final AccountService accountService;
-    private final OperationService operationService;
+    private final FinancialOperationService financialOperationService;
+    private final InterBankTransfersService interBankTransfersService;
+    private final BankConfiguration bankConfiguration;
 
     /**
      * 3.1. Делать платеж: на вход - номер счета, сумма, описание, токен. На основании токена получаем пользователя.
@@ -34,17 +37,17 @@ public class BankService {
         checkAccountInBuUser(accountId, userByToken);
         // Списание со счета
         accountService.withdrawAmount(accountId, amount);
-        Operation operation = createOperation(accountId, amount, description, OperationType.WITHDRAW);
+        FinancialOperation financialOperation = createFinancialOperation(accountId, amount, description, FinancialOperationType.WITHDRAW);
         // Запись операции в историю
-        operationService.addOperation(operation);
+        financialOperationService.addOperation(financialOperation);
     }
 
-    private static Operation createOperation(String accountId,
-                                             BigDecimal amount,
-                                             String description,
-                                             OperationType operationType) {
+    private static FinancialOperation createFinancialOperation(String accountId,
+                                                               BigDecimal amount,
+                                                               String description,
+                                                               FinancialOperationType financialOperationType) {
         UUID uuid = UUID.randomUUID();
-        return new Operation(uuid, accountId, operationType, amount, description);
+        return new FinancialOperation(uuid, accountId, financialOperationType, amount, description);
     }
 
     /**
@@ -68,11 +71,11 @@ public class BankService {
      * @param token
      * @return
      */
-    public List<Operation> getPaymentHistory(String token) {
+    public List<FinancialOperation> getPaymentHistory(String token) {
         // Получаем пользователя по токену
         User userByToken = userService.getUserByToken(token);
         // Возвращаем историю операций пользователя
-        return operationService.getOperationsByUser(userByToken);
+        return financialOperationService.getOperationsByUser(userByToken);
     }
 
     /**
@@ -86,9 +89,9 @@ public class BankService {
     public void makeDeposit(String accountId, BigDecimal amount, String description) {
         // Зачисление на счет
         accountService.deposit(accountId, amount);
-        Operation operation = createOperation(accountId, amount, description, OperationType.DEPOSIT);
+        FinancialOperation financialOperation = createFinancialOperation(accountId, amount, description, FinancialOperationType.DEPOSIT);
         // Запись операции в историю
-        operationService.addOperation(operation);
+        financialOperationService.addOperation(financialOperation);
     }
 
     public void transferToAnotherBank(String token,
@@ -102,9 +105,14 @@ public class BankService {
         // Списание со счета
         accountService.withdrawAmount(accountId, amount);
         // Создание записи об операции
-        Operation operation = createOperation(accountId, amount, description, OperationType.TRANSFER);
+        FinancialOperation financialOperation = createFinancialOperation(accountId, amount, description, FinancialOperationType.TRANSFER);
         // Запись операции в историю
-        operationService.addOperation(operation);
+        financialOperationService.addOperation(financialOperation);
+        //перевод в другой банк
+        interBankTransfersService.transferToAnotherBank(bankConfiguration.getBankName(),
+                amount,
+                description,
+                userByToken.getFullName());
     }
 
 }

@@ -1,6 +1,7 @@
 package org.javaacademy.onlinebanking.repository;
 
 import org.javaacademy.onlinebanking.entity.User;
+import org.javaacademy.onlinebanking.exception.UserAlreadyExistException;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

@@ -3,6 +3,7 @@ package org.javaacademy.onlinebanking.service;
 import lombok.RequiredArgsConstructor;
 import org.javaacademy.onlinebanking.entity.Account;
 import org.javaacademy.onlinebanking.entity.User;
+import org.javaacademy.onlinebanking.exception.NoEnoughMoneyException;
 import org.javaacademy.onlinebanking.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +72,7 @@ public class AccountService {
         BigDecimal totalAmount = account.getAmount();
         totalAmount = totalAmount.subtract(amount);
         if (totalAmount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new RuntimeException("Остаток после операции не может быть отрицательный");
+            throw new NoEnoughMoneyException("Недостаточно денег на счете");
         }
         account.setAmount(totalAmount);
     }

@@ -1,9 +1,15 @@
 package org.javaacademy.onlinebanking.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.javaacademy.onlinebanking.dto.AccountDto;
+import org.javaacademy.onlinebanking.dto.TokenDto;
 import org.javaacademy.onlinebanking.entity.Account;
 import org.javaacademy.onlinebanking.entity.User;
 import org.javaacademy.onlinebanking.service.AccountService;
@@ -20,52 +26,51 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/bank")
-@Tag(name="Контроллер финансовых операций", description="Описание контролера")
+@Tag(name = "Контроллер по счету", description = "Создание счета, Проверка баланса, Все счета пользователя по ТОКЕНУ")
 public class AccountController {
     private final AccountService accountService;
     private final UserService userService;
 
-    /**
-     * Сделать endpoint GET /account?token=[токен пользователя]
-     * - вернет списоск счетов у пользователя.
-     *
-     * @param token
-     * @return
-     */
     @GetMapping("/account")
     @Operation(
-            summary = "Регистрация пользователя",
-            description = "Позволяет зарегистрировать пользователя"
+            summary = "Список всех активных счетов пользователя ПО ТОКЕНУ",
+            description = "Принимает в параметре запроса ТОКЕН и возвращает список всех счетов"
     )
-    public ResponseEntity<List<Account>> gelAllUserAccountByToken(@RequestParam String token) {
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "202",
+                    description = "Успешно", content = {
+                    @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Account.class)))
+            })
+    })
+    public ResponseEntity<List<Account>> gelAllUserAccountByToken(
+            @RequestParam @Parameter(description = "Уникальный токен пользователя") String token) {
         User userByToken = userService.getUserByToken(token);
         List<Account> userAccounts = accountService.getUserAccounts(userByToken);
         return ResponseEntity.accepted().body(userAccounts);
     }
 
-    /**
-     * Сделать endpoint GET /account/{номер счета} - вернет остаток по номеру счета.
-     *
-     * @param accountId
-     * @return
-     */
     @GetMapping("/account/{accountId}")
     @Operation(
-            summary = "Регистрация пользователя",
-            description = "Позволяет зарегистрировать пользователя"
+            summary = "Проверка баланса счета",
+            description = "Вернет остаток по номеру счета"
     )
-    public ResponseEntity<?> getBalance(@PathVariable String accountId) {
+    public ResponseEntity<?> getBalance(
+            @PathVariable @Parameter(description = "Номер счета пользователя") String accountId) {
         BigDecimal accountBalance = accountService.getAccountBalance(accountId);
         return ResponseEntity.status(ACCEPTED).body(accountBalance);
     }
 
     @PostMapping("/account")
     @Operation(
-            summary = "",
-            description = ""
+            summary = "Создает счет для пользователя ПО ТОКЕНУ",
+            description = "В теле запроса принимаем токен пользователя и создает счет" +
+                    " и возвращает уникальный номер счета"
     )
-    public ResponseEntity<?> createAccount(@RequestBody AccountDto accountDto) {
-        User userByToken = userService.getUserByToken(accountDto.getToken());
+    public ResponseEntity<?> createAccount(@RequestBody TokenDto tokenDto) {
+        User userByToken = userService.getUserByToken(tokenDto.getToken());
         String accountId = accountService.createAccountForUser(userByToken);
         return ResponseEntity.status(HttpStatus.CREATED).body(accountId);
     }

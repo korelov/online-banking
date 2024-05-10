@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Сущность для Аутентификации пользователя")
-public class SingInDto {
-    private String phone;
-    private String pin;
+@Schema(description = "Токен")
+public class TokenDto {
+    private String token;
 }

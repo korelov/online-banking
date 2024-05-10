@@ -2,7 +2,7 @@ package org.javaacademy.onlinebanking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.javaacademy.onlinebanking.entity.Account;
-import org.javaacademy.onlinebanking.entity.Operation;
+import org.javaacademy.onlinebanking.entity.FinancialOperation;
 import org.javaacademy.onlinebanking.entity.User;
 import org.javaacademy.onlinebanking.repository.OperationRepository;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OperationService {
+public class FinancialOperationService {
     private final OperationRepository operationRepository;
     private final AccountService accountService;
 
@@ -23,18 +23,18 @@ public class OperationService {
      * @param accountId
      * @return
      */
-    private List<Operation> getOperationsByAccount(String accountId) {
+    private List<FinancialOperation> getOperationsByAccount(String accountId) {
         return operationRepository.getOperationsData().values().stream()
-                .filter(operation -> operation.getAccountId().equals(accountId)).toList();
+                .filter(financialOperation -> financialOperation.getAccountId().equals(accountId)).toList();
     }
 
     /**
      * 2.2. Заносить новую операцию.
      *
-     * @param operation
+     * @param financialOperation
      */
-    public void addOperation(Operation operation) {
-        operationRepository.add(operation);
+    public void addOperation(FinancialOperation financialOperation) {
+        operationRepository.add(financialOperation);
     }
 
     /**
@@ -45,7 +45,7 @@ public class OperationService {
      * @param user
      * @return
      */
-    public List<Operation> getOperationsByUser(User user) {
+    public List<FinancialOperation> getOperationsByUser(User user) {
         List<Account> userAccounts = accountService.getUserAccounts(user);
         return userAccounts.stream()
                 .map(Account::getAccountId)

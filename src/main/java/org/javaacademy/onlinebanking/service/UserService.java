@@ -1,6 +1,8 @@
 package org.javaacademy.onlinebanking.service;
 
 import lombok.RequiredArgsConstructor;
+import org.javaacademy.onlinebanking.dto.PinDto;
+import org.javaacademy.onlinebanking.dto.TokenDto;
 import org.javaacademy.onlinebanking.entity.User;
 import org.javaacademy.onlinebanking.exception.UserAlreadyExistException;
 import org.javaacademy.onlinebanking.repository.UserRepository;
@@ -24,7 +26,7 @@ public class UserService {
      * @param fullName
      * @return
      */
-    public String registerUser(String phone, String fullName) {
+    public PinDto registerUser(String phone, String fullName) {
         User existingUser = userRepository.findByPhone(phone);
         if (existingUser != null) {
             throw new UserAlreadyExistException("Пользователь с таким телефоном уже зарегистрирован");
@@ -34,7 +36,7 @@ public class UserService {
         String pin = String.valueOf(new Random().nextInt(9000) + 1000);
         authenticationService.addUserAuth(user.getId(), pin);
         userRepository.addUser(user);
-        return pin;
+        return new PinDto(pin);
     }
 
     /**
@@ -44,7 +46,7 @@ public class UserService {
      * @param phone
      * @param pin
      */
-    public String authenticateUser(String phone, String pin) {
+    public TokenDto authenticateUser(String phone, String pin) {
         User existingUser = userRepository.findByPhone(phone);
         if (existingUser == null) {
             throw new RuntimeException("Пользователь с таким номером телефона не найден");
@@ -54,7 +56,7 @@ public class UserService {
         if (!authentication) {
             throw new RuntimeException("Некорректный пин-код");
         }
-        return tokenService.createToken(existingUserId);
+        return new TokenDto(tokenService.createToken(existingUserId));
     }
 
     /**

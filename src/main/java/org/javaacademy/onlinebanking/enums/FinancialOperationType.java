@@ -3,7 +3,7 @@ package org.javaacademy.onlinebanking.enums;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum OperationType {
+public enum FinancialOperationType {
     WITHDRAW("Списание"),
     DEPOSIT("Зачисление"),
     TRANSFER("Перевод");
