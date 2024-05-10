@@ -23,4 +23,8 @@ public class UserRepository {
         return data.values().stream().filter(user -> user.getId().equals(userId)).findFirst()
                 .orElseThrow(() -> new RuntimeException("Пользователь с таким идентификатором не существует"));
     }
+
+    public void clear() {
+        data.clear();
+    }
 }

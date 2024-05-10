@@ -31,20 +31,33 @@ public class BankService {
         // Проверяем токен, получаем пользователя
         User userByToken = userService.getUserByToken(token);
         // Проверяем, что счет принадлежит пользователю
+        checkAccountInBuUser(accountId, userByToken);
+        // Списание со счета
+        accountService.withdrawAmount(accountId, amount);
+        Operation operation = createOperation(accountId, amount, description, OperationType.WITHDRAW);
+        // Запись операции в историю
+        operationService.addOperation(operation);
+    }
+
+    private static Operation createOperation(String accountId,
+                                             BigDecimal amount,
+                                             String description,
+                                             OperationType operationType) {
+        UUID uuid = UUID.randomUUID();
+        return new Operation(uuid, accountId, operationType, amount, description);
+    }
+
+    /**
+     * Проверяем, что пользователь является владельцем счета.
+     *
+     * @param accountId
+     * @param userByToken
+     */
+    private void checkAccountInBuUser(String accountId, User userByToken) {
         boolean checkAccountBelongsToUser = accountService.checkAccountBelongsToUser(userByToken, accountId);
         if (!checkAccountBelongsToUser) {
             throw new RuntimeException("Счет не принадлежит пользователю");
         }
-        // Списание со счета
-        accountService.withdrawAmount(accountId, amount);
-        UUID uuid = UUID.randomUUID();
-        Operation operation = new Operation(uuid,
-                accountId,
-                OperationType.WITHDRAW,
-                amount,
-                description);
-        // Запись операции в историю
-        operationService.addOperation(operation);
     }
 
     /**
@@ -73,12 +86,23 @@ public class BankService {
     public void makeDeposit(String accountId, BigDecimal amount, String description) {
         // Зачисление на счет
         accountService.deposit(accountId, amount);
-        UUID uuid = UUID.randomUUID();
-        Operation operation = new Operation(uuid,
-                accountId,
-                OperationType.DEPOSIT,
-                amount,
-                description);
+        Operation operation = createOperation(accountId, amount, description, OperationType.DEPOSIT);
+        // Запись операции в историю
+        operationService.addOperation(operation);
+    }
+
+    public void transferToAnotherBank(String token,
+                                      BigDecimal amount,
+                                      String description,
+                                      String accountId) {
+        // Получили пользователя по токену
+        User userByToken = userService.getUserByToken(token);
+        // Проверили, что пользователь является владельцем счета
+        checkAccountInBuUser(accountId, userByToken);
+        // Списание со счета
+        accountService.withdrawAmount(accountId, amount);
+        // Создание записи об операции
+        Operation operation = createOperation(accountId, amount, description, OperationType.TRANSFER);
         // Запись операции в историю
         operationService.addOperation(operation);
     }

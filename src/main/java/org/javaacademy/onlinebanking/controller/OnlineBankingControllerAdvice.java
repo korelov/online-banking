@@ -14,4 +14,10 @@ public class OnlineBankingControllerAdvice {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body("Пользователь с таким телефоном уже зарегистрирован!");
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> runTimeException(Exception e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("У нас произошла ошибка, уже работаем над ней.");
+    }
 }

@@ -1,5 +1,7 @@
 package org.javaacademy.onlinebanking.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.javaacademy.onlinebanking.dto.AccountDto;
 import org.javaacademy.onlinebanking.entity.Account;
@@ -18,6 +20,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/bank")
+@Tag(name="Контроллер финансовых операций", description="Описание контролера")
 public class AccountController {
     private final AccountService accountService;
     private final UserService userService;
@@ -30,6 +33,10 @@ public class AccountController {
      * @return
      */
     @GetMapping("/account")
+    @Operation(
+            summary = "Регистрация пользователя",
+            description = "Позволяет зарегистрировать пользователя"
+    )
     public ResponseEntity<List<Account>> gelAllUserAccountByToken(@RequestParam String token) {
         User userByToken = userService.getUserByToken(token);
         List<Account> userAccounts = accountService.getUserAccounts(userByToken);
@@ -43,12 +50,20 @@ public class AccountController {
      * @return
      */
     @GetMapping("/account/{accountId}")
+    @Operation(
+            summary = "Регистрация пользователя",
+            description = "Позволяет зарегистрировать пользователя"
+    )
     public ResponseEntity<?> getBalance(@PathVariable String accountId) {
         BigDecimal accountBalance = accountService.getAccountBalance(accountId);
         return ResponseEntity.status(ACCEPTED).body(accountBalance);
     }
 
     @PostMapping("/account")
+    @Operation(
+            summary = "",
+            description = ""
+    )
     public ResponseEntity<?> createAccount(@RequestBody AccountDto accountDto) {
         User userByToken = userService.getUserByToken(accountDto.getToken());
         String accountId = accountService.createAccountForUser(userByToken);

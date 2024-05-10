@@ -1,5 +1,7 @@
 package org.javaacademy.onlinebanking.controller;
 
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.javaacademy.onlinebanking.dto.PayDto;
 import org.javaacademy.onlinebanking.dto.ReceiveDto;
@@ -14,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/bank")
+@Tag(name="Контроллер финансовых операций", description="Описание контролера")
 public class OperationController {
     private final BankService bankService;
 
@@ -25,6 +28,7 @@ public class OperationController {
      * @return
      */
     @GetMapping("/operations")
+
     public ResponseEntity<List<Operation>> getAllOperationByUser(@RequestParam String token) {
         List<Operation> paymentHistory = bankService.getPaymentHistory(token);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(paymentHistory);
@@ -39,6 +43,7 @@ public class OperationController {
      * @return
      */
     @PostMapping("/operations/pay")
+
     public ResponseEntity<?> makePayment(@RequestBody PayDto payDto) {
         bankService.makePayment(payDto.getAccountId(),
                 payDto.getAmount(),

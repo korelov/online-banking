@@ -1,9 +1,13 @@
 package org.javaacademy.onlinebanking.dto;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SingInDto {
-    String phone;
-    String pin;
+    private String phone;
+    private String pin;
 }
