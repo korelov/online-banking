@@ -16,31 +16,14 @@ public class AccountRepository {
         return accounts.containsKey(id);
     }
 
-    /**
-     * Добавление счета
-     *
-     * @param account Счет
-     */
     public void addAccount(Account account) {
         accounts.put(account.getAccountId(), account);
     }
 
-    /**
-     * Поиск счета по номеру
-     *
-     * @param accountId Номер счета
-     * @return Вернет счет
-     */
     public Account findById(String accountId) {
         return accounts.get(accountId);
     }
 
-    /**
-     * Получение всех счетов у пользователя
-     *
-     * @param user Пользователь
-     * @return Список счетов пользователя
-     */
     public List<Account> getAllAccountsByUser(User user) {
         return accounts.values().stream()
                 .filter(account -> account.getUser().equals(user))
