@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.ACCEPTED;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/bank")
@@ -49,7 +47,7 @@ public class AccountController {
             @RequestParam @Parameter(description = "Уникальный токен пользователя") String token) {
         User userByToken = userService.getUserByToken(token);
         List<Account> userAccounts = accountService.getUserAccounts(userByToken);
-        return ResponseEntity.accepted().body(userAccounts);
+        return ResponseEntity.ok().body(userAccounts);
     }
 
     @GetMapping("/account/{accountId}")
@@ -60,7 +58,7 @@ public class AccountController {
     public ResponseEntity<?> getBalance(
             @PathVariable @Parameter(description = "Номер счета пользователя") String accountId) {
         BigDecimal accountBalance = accountService.getAccountBalance(accountId);
-        return ResponseEntity.status(ACCEPTED).body(accountBalance);
+        return ResponseEntity.ok().body(accountBalance);
     }
 
     @PostMapping("/account")

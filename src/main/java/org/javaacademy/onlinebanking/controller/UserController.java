@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.javaacademy.onlinebanking.dto.PinDto;
-import org.javaacademy.onlinebanking.dto.SingInDto;
+import org.javaacademy.onlinebanking.dto.SignInDto;
 import org.javaacademy.onlinebanking.dto.TokenDto;
 import org.javaacademy.onlinebanking.dto.UserDto;
 import org.javaacademy.onlinebanking.service.UserService;
@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/bank/user")
+@RequestMapping("/api/bank")
 @Tag(name = "Контроллер для работы с пользователями", description = "Содержит в себе методы " +
         "регистрации и аутентификации пользователя")
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping("/user/signup")
     @Operation(
             summary = "Регистрация пользователя",
             description = "Создаст пользователя. Вернет PIN-код."
@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(pin);
     }
 
-    @PostMapping("/auth")
+    @PostMapping("/user/auth")
     @Operation(
             summary = "Аутентификация пользователя",
             description = "Проверяет подлинность предъявленного пользователем идентификатора." +
@@ -63,8 +63,8 @@ public class UserController {
                                     array = @ArraySchema(schema = @Schema(implementation = TokenDto.class)))
                     })
     })
-    public ResponseEntity<?> signIn(@RequestBody SingInDto singInDto) {
-        TokenDto token = userService.authenticateUser(singInDto.getPhone(), singInDto.getPin());
+    public ResponseEntity<?> signIn(@RequestBody SignInDto signInDto) {
+        TokenDto token = userService.authenticateUser(signInDto.getPhone(), signInDto.getPin());
         return ResponseEntity.accepted().body(token);
     }
 }

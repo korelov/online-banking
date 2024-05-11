@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "Сущность для Аутентификации пользователя")
-public class SingInDto {
+public class SignInDto {
     private String phone;
     private String pin;
 }
